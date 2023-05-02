@@ -18,10 +18,10 @@ def spelling(month)
 end
 
 def input_students
-  puts "Please enter the names of the students"
+  puts "Please enter the name of the student"
   puts "To finish, just hit return twice"
   student = []
-  name = gets.chomp.capitalize
+  name = gets.delete("\n").capitalize
   while !name.empty? do
     puts "Please enter the student's country of birth"
     country = gets.chomp.capitalize
@@ -40,8 +40,12 @@ def input_students
       end
     end
     student << {name: name, country: country, hobbies: hobbies, height: height, cohort: month.to_sym}
-    puts "Now we have #{student.count} students"
-    puts "Please enter the names of the students"
+    if student.count == 1
+      puts "Now we have #{student.count} student"
+    else
+      puts "Now we have #{student.count} students"
+    end
+    puts "Please enter the name of the student"
     puts "To finish, just hit return twice"
     name = gets.chomp.capitalize
   end
@@ -68,7 +72,11 @@ def print_loop(students)
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  if students.count == 1
+    puts "Now we have #{students.count} student"
+  else
+    puts "Now we have #{students.count} students"
+  end
 end
 def letter_sort(students)
   students.each do |student|
