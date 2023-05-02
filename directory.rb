@@ -38,7 +38,11 @@ end
 def print_footer(students)
   puts "Overall, we have #{students.count} great students"
 end
-
+students.each do |student|
+  if student[:name].start_with?("N")
+    puts student
+  end
+end
 students = input_students
 print_header
 print(students)
