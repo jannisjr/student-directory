@@ -114,15 +114,16 @@ end
 students = input_students
 if students.empty?
   puts "No students found"
+else
+  print_header
+  print(students)
+  puts ""
+  puts "names under 12 characters"
+  name_length(students)
+  puts ""
+  puts "names starting with N"
+  letter_sort(students)
+  puts ""
+  group_by_cohort(students)
+  print_footer(students)
 end
-print_header
-print(students)
-puts ""
-puts "names under 12 characters"
-name_length(students)
-puts ""
-puts "names starting with N"
-letter_sort(students)
-puts ""
-group_by_cohort(students)
-print_footer(students)
