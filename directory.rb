@@ -39,8 +39,7 @@ end
 
 def print(students)
     students.each.with_index(1) do |student,index|
-      puts "#{index} #{student[:name]} #{student[:country]} #{student[:hobbies]}
-      #{student[:height]} (#{student[:cohort]} cohort)"
+      puts "#{index} #{student[:name].center(16)} #{student[:country].center(15)} #{student[:hobbies].center(15)} #{student[:height].center(15)} (#{student[:cohort]} cohort)"
   end
 end
 # The same method using loops
