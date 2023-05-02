@@ -1,33 +1,49 @@
-students = [
- {name: "Dr. Hannibal Lecter", cohort: :november} ,
- {name: "Darth Vader", cohort: :november} ,
- {name: "Nurse Ratched", cohort: :november,} ,
- {name: "Michael Corleone", cohort: :november} ,
- {name: "Alex DeLarge", cohort: :november} ,
- {name: "The Wicked Witch of the West", cohort: :november} ,
- {name: "Terminator", cohort: :november} ,
- {name: "Freddy Krueger", cohort: :november} ,
- {name: "The Joker", cohort: :november} ,
- {name: "Joffrey Baratheon", cohort: :november} ,
- {name: "Norman Bates", cohort: :november} ,
-]
+require 'date'
+def spelling(month)
+  month_array = [ 
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+  month_array.include?(month)
+end
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
   student = []
-  name = gets.chomp
+  name = gets.chomp.capitalize
   while !name.empty? do
     puts "Please enter the student's country of birth"
-    country = gets.chomp
+    country = gets.chomp.capitalize
     puts "Please enter the student's hobbies"
     hobbies = gets.chomp
     puts "Please enter the student's height in metres and centimetres"
     height = gets.chomp
-    student << {name: name, country: country, hobbies: hobbies, height: height, cohort: :november}
+    puts "What cohort month are they in?"
+    month = gets.chomp.capitalize
+    if month.empty?
+      month = "November"
+    else
+      until spelling(month) == true
+        puts "Please check the spelling of the month and try again"
+        month = gets.chomp.capitalize
+      end
+    end
+    student << {name: name, country: country, hobbies: hobbies, height: height, cohort: month.to_sym}
     puts "Now we have #{student.count} students"
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
-    name = gets.chomp
+    name = gets.chomp.capitalize
   end
   student
 end
@@ -68,6 +84,25 @@ def name_length(students)
     end
   end
 end
+
+def group_by_cohort(students)
+  cohorts_hash = {}
+  puts "Cohort Groups"
+  students.each do |student|
+    cohort = student[:cohort]
+    name = student[:name]
+    if cohorts_hash[cohort] == nil
+      cohorts_hash[cohort] = [name]
+    else
+      cohorts_hash[cohort].push(name)
+    end
+  end
+  cohorts_hash.each do |key, value|
+    puts "Cohort #{key}"
+    puts value
+  end
+end
+
 students = input_students
 if students.empty?
   puts "No students found"
@@ -80,4 +115,6 @@ name_length(students)
 puts ""
 puts "names starting with N"
 letter_sort(students)
+puts ""
+group_by_cohort(students)
 print_footer(students)
