@@ -30,8 +30,15 @@ def print_header
 end
 
 def print(students)
-  students.each.with_index(1) do |student,index|
-    puts "#{index} #{student[:name]} (#{student[:cohort]} cohort)"
+    students.each.with_index(1) do |student,index|
+      puts "#{index} #{student[:name]} (#{student[:cohort]} cohort)"
+  end
+end
+# The same method using loops
+def print_loop(students)
+  until students.empty?
+    name = students.pop
+    puts "#{name[:name]} #{name[:cohort]} cohort"
   end
 end
 
@@ -52,7 +59,7 @@ def name_length(students)
     end
   end
 end
-students = input_students
+students = input_student
 letter_sort(students)
 name_length(students)
 print_header
