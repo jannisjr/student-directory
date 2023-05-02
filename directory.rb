@@ -14,14 +14,22 @@ students = [
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  students = []
+  student = []
   name = gets.chomp
   while !name.empty? do
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
+    puts "Please enter the student's country of birth"
+    country = gets.chomp
+    puts "Please enter the student's hobbies"
+    hobbies = gets.chomp
+    puts "Please enter the student's height in metres and centimetres"
+    height = gets.chomp
+    student << {name: name, country: country, hobbies: hobbies, height: height, cohort: :november}
+    puts "Now we have #{student.count} students"
+    puts "Please enter the names of the students"
+    puts "To finish, just hit return twice"
     name = gets.chomp
   end
-  students
+  student
 end
 
 def print_header
@@ -31,14 +39,16 @@ end
 
 def print(students)
     students.each.with_index(1) do |student,index|
-      puts "#{index} #{student[:name]} (#{student[:cohort]} cohort)"
+      puts "#{index} #{student[:name]} #{student[:country]} #{student[:hobbies]}
+      #{student[:height]} (#{student[:cohort]} cohort)"
   end
 end
 # The same method using loops
 def print_loop(students)
   until students.empty?
     name = students.pop
-    puts "#{name[:name]} #{name[:cohort]} cohort"
+    puts "#{name[:name]} #{name[:country]} #{name[:hobbies]}
+    #{name[:height]}#{name[:cohort]} cohort"
   end
 end
 
@@ -59,9 +69,16 @@ def name_length(students)
     end
   end
 end
-students = input_student
-letter_sort(students)
-name_length(students)
+students = input_students
+if students.empty?
+  puts "No students found"
+end
 print_header
 print(students)
+puts ""
+puts "names under 12 characters"
+name_length(students)
+puts ""
+puts "names starting with N"
+letter_sort(students)
 print_footer(students)
