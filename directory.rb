@@ -16,6 +16,7 @@ def interactive_menu
 end
 
 def process(selection)
+  puts "You have selected option #{selection}"
   case selection
   when "1"
     input_students
@@ -37,23 +38,17 @@ def input_students
   puts "To finish, just hit return twice"
   name = STDIN.gets.delete("\n").capitalize
   while !name.empty? do
-    puts "Please enter the student's country of birth"
-    country = STDIN.gets.chomp.capitalize
-    puts "Please enter the student's hobbies"
-    hobbies = STDIN.gets.chomp
-    puts "Please enter the student's height in metres and centimetres"
-    height = STDIN.gets.chomp
     puts "What cohort month are they in?"
-    month = STDIN.gets.chomp.capitalize
-    if month.empty?
-      month = "November"
+    cohort = STDIN.gets.chomp.capitalize
+    if cohort.empty?
+      cohort = "November"
     else
-      until spelling(month) == true
+      until spelling(cohort) == true
         puts "Please check the spelling of the month and try again"
-        month = STDIN.gets.chomp.capitalize
+        cohort = STDIN.gets.chomp.capitalize
       end
     end
-    @students << {name: name, country: country, hobbies: hobbies, height: height, cohort: month.to_sym}
+    push_to_array(name, cohort)
     if @students.count == 1
       puts "Now we have #{@students.count} student"
     else
@@ -78,7 +73,7 @@ end
 
 def print_student_list
     @students.each.with_index(1) do |student,index|
-      puts "#{index} #{student[:name]} #{student[:country]} #{student[:hobbies]} #{student[:height]} (#{student[:cohort]} cohort)"
+      puts "#{index} #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 # The same method using loops
@@ -133,9 +128,7 @@ def group_by_cohort
 end
 
 def save_students
-  # open the file for writing
   file = File.open("students.csv", "w")
-  # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
@@ -144,24 +137,30 @@ def save_students
   file.close
 end
 
+def push_to_array(name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
+end
+
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    push_to_array(name, cohort)
   end
   file.close
 end
 
 def try_load_students
-  filename = ARGV.first# first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
-  if File.exists?(filename) # if it exists
+  filename = ARGV.first
+  if filename.nil?
+    puts "Loaded the default file: students.csv"
+    load_students 
+  elsif File.exists?(filename) 
     load_students(filename)
      puts "Loaded #{@students.count} from #{filename}"
-  else # if it doesn't exist
+  else
     puts "Sorry, #{filename} doesn't exist."
-    exit # quit the program
+    exit
   end
 end
 
