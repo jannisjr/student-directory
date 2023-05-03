@@ -128,7 +128,9 @@ def group_by_cohort
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  puts "What filename would you like to save this under?"
+  file = STDIN.gets.chomp
+  File.open(file, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
@@ -142,6 +144,11 @@ def push_to_array(name, cohort)
 end
 
 def load_students(filename = "students.csv")
+  puts "What would you like to load? For the default press return"
+  filename = STDIN.gets.chomp
+  if filename.empty?
+    filename = "students.csv"
+  end
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
