@@ -1,48 +1,8 @@
-def interactive_menu
-  students = []
-  loop do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
-    selection = gets.chomp
-    case selection
-      when "1"
-        students = input_students
-      when "2"
-        print_header
-        print(students)
-        print_footer(students)
-      when "9"
-        exit
-      else
-        puts "I don't know what you mean. Try again"
-      end
-    end
-  end
-    
-def spelling(month)
-  month_array = [ 
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ]
-  month_array.include?(month)
-end
+@students = []
 
 def input_students
-  interactive_menu
   puts "Please enter the name of the student"
   puts "To finish, just hit return twice"
-  student = []
   name = gets.delete("\n").capitalize
   while !name.empty? do
     puts "Please enter the student's country of birth"
@@ -61,17 +21,66 @@ def input_students
         month = gets.chomp.capitalize
       end
     end
-    student << {name: name, country: country, hobbies: hobbies, height: height, cohort: month.to_sym}
-    if student.count == 1
-      puts "Now we have #{student.count} student"
+    @students << {name: name, country: country, hobbies: hobbies, height: height, cohort: month.to_sym}
+    if @students.count == 1
+      puts "Now we have #{@students.count} student"
     else
-      puts "Now we have #{student.count} students"
+      puts "Now we have #{@students.count} students"
     end
     puts "Please enter the name of the student"
     puts "To finish, just hit return twice"
     name = gets.chomp.capitalize
   end
-  student
+end
+
+def interactive_menu
+  loop do
+   print_menu
+   process(gets.chomp)
+  end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def show_students
+  print_header
+  print_student_list
+  print_footer
+end
+
+def process(selection)
+  case selection
+  when "1"
+    input_students
+  when "2"
+    show_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you mean, try again"
+  end
+end
+
+def spelling(month)
+  month_array = [ 
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+  month_array.include?(month)
 end
 
 def print_header
@@ -79,46 +88,48 @@ def print_header
   puts "-------------"
 end
 
-def print(students)
-    students.each.with_index(1) do |student,index|
+def print_student_list
+    @students.each.with_index(1) do |student,index|
       puts "#{index} #{student[:name].center(16)} #{student[:country].center(15)} #{student[:hobbies].center(15)} #{student[:height].center(15)} (#{student[:cohort]} cohort)"
   end
 end
 # The same method using loops
-def print_loop(students)
-  until students.empty?
-    name = students.pop
+def print_loop
+  until @students.empty?
+    name = @students.pop
     puts "#{name[:name]} #{name[:country]} #{name[:hobbies]}
     #{name[:height]}#{name[:cohort]} cohort"
   end
 end
 
-def print_footer(students)
-  if students.count == 1
-    puts "Now we have #{students.count} student"
+def print_footer
+  if @students.count == 1
+    puts "Now we have #{@students.count} student"
   else
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{@students.count} students"
   end
 end
-def letter_sort(students)
-  students.each do |student|
+
+def letter_sort
+  @students.each do |student|
     if student[:name].start_with?("N")
       puts student
     end
   end
 end
-def name_length(students)
-  students.each do |student|
+
+def name_length
+  @students.each do |student|
     if student[:name].length < 12
       puts student
     end
   end
 end
 
-def group_by_cohort(students)
+def group_by_cohort
   cohorts_hash = {}
   puts "Cohort Groups"
-  students.each do |student|
+  @students.each do |student|
     cohort = student[:cohort]
     name = student[:name]
     if cohorts_hash[cohort] == nil
@@ -133,19 +144,4 @@ def group_by_cohort(students)
   end
 end
 
-students = input_students
-if students.empty?
-  puts "No students found"
-else
-  print_header
-  print(students)
-  puts ""
-  puts "names under 12 characters"
-  name_length(students)
-  puts ""
-  puts "names starting with N"
-  letter_sort(students)
-  puts ""
-  group_by_cohort(students)
-  print_footer(students)
-end
+interactive_menu
