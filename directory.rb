@@ -1,3 +1,8 @@
+require 'csv'
+
+@default_filename = "students.csv"
+@loaded_filename = ""
+
 @students = []
 
 def print_menu
@@ -48,7 +53,7 @@ def input_students
         cohort = STDIN.gets.chomp.capitalize
       end
     end
-    push_to_array(name, cohort)
+    add_student(name, cohort)
     if @students.count == 1
       puts "Now we have #{@students.count} student"
     else
@@ -127,47 +132,48 @@ def group_by_cohort
   end
 end
 
-def save_students
-  puts "What filename would you like to save this under? For default press return"
-  file = STDIN.gets.chomp
-  if file.empty?
-    file = "students.csv"
-  end
-  File.open(file, "w") do |file|
+
+def save_students (filename = @filename)
+  CSV.open(filename, "w") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv << [student[:name], student[:cohort]]
     end
   end
+  puts "Saved to #{filename}"
 end
 
-def push_to_array(name, cohort)
+def add_student(name, cohort)
   @students << {name: name, cohort: cohort.to_sym}
 end
 
-def load_students(filename = "students.csv")
-  puts "What would you like to load? For the default press return"
-  filename = STDIN.gets.chomp
-  if filename.empty?
+def load_students(filename = @filename)
+  puts "Would you like to load a file other than the default? y/n"
+  response = STDIN.gets.chomp
+  if response == "y"
+    puts "Please name the file you would like to load"
+    filename = STDIN.gets.chomp
+  else
     filename = "students.csv"
   end
-  file = File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      push_to_array(name, cohort)
-    end
-  end  
+  if File.exist?(filename)
+    CSV.foreach(filename) do |row|
+      name, cohort = row
+      add_student(name, cohort) 
+  end 
+    @filename = filename
+    puts "#{filename} loaded successfully"
+  end
 end
 
 def try_load_students
   filename = ARGV.first
   if filename.nil?
     puts "Loaded the default file: students.csv"
-    load_students 
-  elsif File.exists?(filename) 
-    load_students(filename)
-     puts "Loaded #{@students.count} from #{filename}"
+    load_students(@filename)
+  elsif File.exist?(filename)
+    @filename = filename
+    load_students(@filename)
+     puts "Loaded #{@students.count} from #{@filename}"
   else
     puts "Sorry, #{filename} doesn't exist."
     exit
