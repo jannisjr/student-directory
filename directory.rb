@@ -84,8 +84,7 @@ end
 def print_loop
   until @students.empty?
     name = @students.pop
-    puts "#{name[:name]} #{name[:country]} #{name[:hobbies]}
-    #{name[:height]}#{name[:cohort]} cohort"
+    puts "#{name[:name]} #{name[:cohort]} cohort"
   end
 end
 
