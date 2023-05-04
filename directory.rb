@@ -1,7 +1,6 @@
 require 'csv'
 
 @default_filename = "students.csv"
-@loaded_filename = ""
 
 @students = []
 
